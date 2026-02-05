@@ -35,9 +35,12 @@ def parse_mailerlite(text: str):
         "clicks": None,
         "click_rate": None,
         "unsubscribes": None,
+        "unsubscribe_rate": None,
         "spam_complaints": None,
         "hard_bounces": None,
+        "hard_bounce_rate": None,
         "soft_bounces": None,
+        "soft_bounce_rate": None,
     }
 
     for line in lines:
@@ -76,15 +79,18 @@ def parse_mailerlite(text: str):
 
         elif section == "bad_statistics":
             key, val = parse_kv(line)
-            num, _ = extract_number_and_percent(val)
+            num, pct = extract_number_and_percent(val)
             if key == "Unsubscribed:":
                 data["unsubscribes"] = num
+                data["unsubscribe_rate"] = pct
             elif key == "Spam complaints:":
                 data["spam_complaints"] = num
             elif key == "Hard bounce:":
                 data["hard_bounces"] = num
+                data["hard_bounce_rate"] = pct
             elif key == "Soft bounce:":
                 data["soft_bounces"] = num
+                data["soft_bounce_rate"] = pct
 
     if data["opens"] and data["clicks"]:
         data["ctor"] = data["clicks"] / data["opens"]

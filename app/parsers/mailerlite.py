@@ -41,7 +41,6 @@ def parse_mailerlite(text: str):
     }
 
     for line in lines:
-        print(line)
         if line == 'Campaign report':
             section = "campaign_report"
             continue

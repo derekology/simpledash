@@ -53,6 +53,8 @@ const router = useRouter()
 const campaigns = ref<CampaignData[]>([])
 const activeViewTab = ref<'individual' | 'trends'>('individual')
 const activeCampaignTab = ref(0)
+const hasFailedUploads = ref(false)
+const failedUploadCount = ref(0)
 
 onMounted(() => {
   const campaignsJson = sessionStorage.getItem('campaigns')
@@ -71,6 +73,19 @@ onMounted(() => {
     }
   } else {
     router.push('/')
+  }
+
+  const failedUploadsJson = sessionStorage.getItem('failedUploads')
+  if (failedUploadsJson) {
+    try {
+      const failedUploads = JSON.parse(failedUploadsJson)
+      if (Array.isArray(failedUploads) && failedUploads.length > 0) {
+        hasFailedUploads.value = true
+        failedUploadCount.value = failedUploads.length
+      }
+    } catch (error) {
+      console.error('Failed to parse failed uploads:', error)
+    }
   }
 })
 
@@ -367,6 +382,16 @@ const trendChartOptions = {
 
 <template>
   <div class="dashboard-view">
+    <div v-if="hasFailedUploads" class="failed-upload-banner">
+      <div class="failed-upload-banner-content">
+        <span class="failed-upload-icon">⚠️</span>
+        <span class="failed-upload-text">
+          {{ failedUploadCount }} {{ failedUploadCount === 1 ? 'file' : 'files' }} failed to upload in your last batch.
+          Only successfully parsed campaigns are shown.
+        </span>
+      </div>
+    </div>
+
     <main class="main-content">
       <div class="content-wrapper">
         <div class="view-tabs">
@@ -631,6 +656,34 @@ const trendChartOptions = {
   max-width: 1200px;
   padding: 32px;
   margin: 0 auto;
+}
+
+.failed-upload-banner {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  padding: 0.5rem 1rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 10;
+  height: var(--top-banner-height)
+}
+
+.failed-upload-banner-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.failed-upload-icon {
+  font-size: 1.25rem;
+  margin-top: -5px;
+}
+
+.failed-upload-text {
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .view-tabs {

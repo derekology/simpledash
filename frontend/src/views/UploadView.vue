@@ -39,6 +39,17 @@ const uploadResults = ref<UploadResponse | null>(null)
 const uploadError = ref<string | null>(null)
 const validationError = ref<string | null>(null)
 
+const hasDataInSession = () => {
+    const campaignsJson = sessionStorage.getItem('campaigns')
+    if (!campaignsJson) return false
+    try {
+        const campaigns = JSON.parse(campaignsJson)
+        return Array.isArray(campaigns) && campaigns.length > 0
+    } catch {
+        return false
+    }
+}
+
 const handleFilesSelected = (files: File[]) => {
     selectedFiles.value = files
     uploadResults.value = null
@@ -62,6 +73,7 @@ const handleUpload = async () => {
 
     try {
         sessionStorage.removeItem('campaigns')
+        sessionStorage.removeItem('failedUploads')
 
         const formData = new FormData()
         selectedFiles.value.forEach(file => {
@@ -80,6 +92,10 @@ const handleUpload = async () => {
 
         const data = await response.json()
         uploadResults.value = data
+
+        if (data.errors && data.errors.length > 0) {
+            sessionStorage.setItem('failedUploads', JSON.stringify(data.errors))
+        }
 
         if (data.results && data.results.length > 0) {
             const campaigns = data.results
@@ -168,7 +184,7 @@ const viewDashboard = () => {
                             </div>
                         </li>
                     </ul>
-                    <button @click="viewDashboard" class="dashboard-btn">View Dashboard</button>
+                    <button v-if="hasDataInSession()" @click="viewDashboard" class="dashboard-btn">Go to Dashboard</button>
                 </div>
 
                 <div v-if="uploadResults.errors && uploadResults.errors.length > 0"

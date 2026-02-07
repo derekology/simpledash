@@ -504,7 +504,7 @@ const unsubscribeRateTrend = computed(() => {
       {
         label: 'Unsubscribe Rate (%)',
         data: data,
-        borderColor: '#666666',
+        borderColor: '#999999',
         backgroundColor: 'rgba(34, 34, 34, 0.1)',
         tension: 0.4,
         pointRadius: 4,
@@ -568,7 +568,7 @@ const softBounceRateTrend = computed(() => {
       {
         label: 'Soft Bounce Rate (%)',
         data: data,
-        borderColor: '#666666',
+        borderColor: '#222222',
         backgroundColor: 'rgba(153, 153, 153, 0.1)',
         tension: 0.4,
         pointRadius: 4,
@@ -697,18 +697,17 @@ const trendChartOptions = {
 <template>
   <div class="dashboard-view">
     <main class="main-content">
-      <div class="content-wrapper">
-        <div v-if="hasFailedUploads" class="warning-banner">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-            <line x1="12" y1="9" x2="12" y2="13" />
-            <line x1="12" y1="17" x2="12.01" y2="17" />
-          </svg>
-          <p>{{ failedUploadCount }} {{ failedUploadCount === 1 ? 'file' : 'files' }} failed to upload in your last
-            batch. Only successfully parsed campaigns are shown below.</p>
+      <div v-if="hasFailedUploads" class="failed-upload-banner">
+        <div class="failed-upload-banner-content">
+          <span class="failed-upload-icon">⚠️</span>
+          <span class="failed-upload-text">
+            {{ failedUploadCount }} {{ failedUploadCount === 1 ? 'file' : 'files' }} failed to upload in your last
+            batch.
+            Only successfully parsed campaigns are shown.
+          </span>
         </div>
-
+      </div>
+      <div class="content-wrapper">
         <div class="view-tabs">
           <button :class="['view-tab', { active: activeViewTab === 'individual' }]"
             @click="activeViewTab = 'individual'">
@@ -799,7 +798,6 @@ const trendChartOptions = {
             </div>
           </div>
 
-          <!-- Negative Metrics Section -->
           <div v-if="activeCampaign" class="metrics-section">
             <h2 class="section-title">Negative Metrics</h2>
             <div class="metrics-row">

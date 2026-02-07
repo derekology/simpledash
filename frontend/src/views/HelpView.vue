@@ -4,14 +4,14 @@
 <template>
     <main class="main-content">
         <div class="content-wrapper">
-            <h1 class="page-title">Help & About</h1>
+            <h1 class="page-title">Help / About</h1>
 
             <div class="help-section">
                 <h2>What is Simple Dash?</h2>
                 <p>
-                    Simple Dash is a privacy-focused email campaign analytics tool that helps you visualize and compare
-                    your email marketing performance across multiple campaigns. Upload your campaign reports and instantly
-                    see trends, metrics, and insights.
+                    Simple Dash is a usability-focused email campaign analytics tool that helps you visualize and
+                    compare your email marketing performance across multiple campaigns. Upload your campaign reports and
+                    instantly see trends, metrics, and insights.
                 </p>
             </div>
 
@@ -20,18 +20,18 @@
                 <ol class="steps-list">
                     <li>
                         <strong>Upload Your Reports</strong>
-                        <p>Export your campaign reports as CSV files from your email marketing platform and upload them to
-                            Simple Dash.</p>
+                        <p>Export your campaign reports as CSV files from your email marketing platform and upload them
+                            to Simple Dash.</p>
                     </li>
                     <li>
                         <strong>Automatic Parsing</strong>
-                        <p>Our parser automatically detects your platform and extracts key metrics like open rates, click
-                            rates, bounces, and more.</p>
+                        <p>Our parser automatically detects your platform and extracts key metrics like open rates,
+                            click rates, bounces, and more.</p>
                     </li>
                     <li>
                         <strong>View Your Dashboard</strong>
-                        <p>Explore individual campaign performance or view trends across all your campaigns with interactive
-                            charts and visualizations.</p>
+                        <p>Explore individual campaign performance or view trends across all your campaigns with
+                            interactive charts and visualizations.</p>
                     </li>
                 </ol>
             </div>
@@ -41,7 +41,9 @@
                 <div class="platforms-grid">
                     <div class="platform-card">
                         <h3>MailChimp</h3>
-                        <p>Export your campaign reports as CSV files from the MailChimp dashboard. Each CSV can contain multiple campaigns, and duplicate campaigns (based on unique ID) will be automatically deduplicated using the most recent upload.</p>
+                        <p>Export your campaign reports as CSV files from the MailChimp dashboard. Each CSV can contain
+                            multiple campaigns, and duplicate campaigns (based on unique ID) will be automatically
+                            deduplicated using the most recent upload.</p>
                     </div>
                     <div class="platform-card">
                         <h3>MailerLite Classic</h3>
@@ -63,13 +65,14 @@
                     <div>
                         <h3>Your Data Stays Private</h3>
                         <ul>
-                            <li><strong>No server storage:</strong> Your campaign data is never stored on our servers. Files
-                                are parsed in real-time and discarded immediately.</li>
+                            <li><strong>No server storage:</strong> Your campaign data is never stored on our servers.
+                                Files are parsed in real-time and discarded immediately.</li>
                             <li><strong>Local browser storage only:</strong> Parsed data is stored temporarily in your
                                 browser's session storage for the dashboard view.</li>
-                            <li><strong>Cleared when you leave:</strong> All data is automatically cleared when you close the
-                                tab or navigate away.</li>
-                            <li><strong>No accounts or tracking:</strong> No sign-up required, no cookies, no tracking.</li>
+                            <li><strong>Cleared when you leave:</strong> All data is automatically cleared when you
+                                close the tab or navigate away.</li>
+                            <li><strong>No accounts or tracking:</strong> No sign-up required, no cookies, no tracking.
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -90,10 +93,11 @@
                 <h2>Tips for Best Results</h2>
                 <ul class="tips-list">
                     <li>Upload multiple campaigns to unlock trend analysis and the send-time heatmap</li>
-                    <li>Make sure your CSV files are exported directly from your email platform without modifications</li>
+                    <li>Make sure your CSV files are exported directly from your email platform without modifications
+                    </li>
                     <li>Campaign data is sorted chronologically by send date for accurate trend visualization</li>
-                    <li>If some files fail to parse, successfully parsed campaigns will still be displayed with a warning
-                        banner</li>
+                    <li>If some files fail to parse, successfully parsed campaigns will still be displayed with a
+                        warning banner</li>
                     <li>For MailChimp: Duplicate campaigns (same unique ID) across multiple files will be automatically
                         deduplicated, keeping the version from the most recent upload</li>
                 </ul>
@@ -126,13 +130,6 @@
                             dashboard or re-upload your files anytime to view the data again.</p>
                     </div>
                 </div>
-            </div>
-
-            <div class="help-section footer-section">
-                <p class="footer-text">
-                    Simple Dash is created by <a href="https://derekw.co/?utm_medium=referral&utm_source=simple-dash"
-                        target="_blank" rel="noopener">derekw</a>
-                </p>
             </div>
         </div>
     </main>

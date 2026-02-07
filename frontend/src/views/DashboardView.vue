@@ -701,9 +701,8 @@ const trendChartOptions = {
         <div class="failed-upload-banner-content">
           <span class="failed-upload-icon">⚠️</span>
           <span class="failed-upload-text">
-            {{ failedUploadCount }} {{ failedUploadCount === 1 ? 'file' : 'files' }} failed to upload in your last
-            batch.
-            Only successfully parsed campaigns are shown.
+            {{ failedUploadCount }} {{ failedUploadCount === 1 ? 'file' : 'files' }} failed to upload. Only successfully
+            parsed campaigns are shown.
           </span>
         </div>
       </div>

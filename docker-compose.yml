@@ -1,0 +1,25 @@
+services:
+  simple-dash:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: simple-dash
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      - PORT=8000
+      - MAX_FILE_SIZE=${MAX_FILE_SIZE:-10485760}
+      - MAX_FILES=${MAX_FILES:-12}
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8000/docs').read()",
+        ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s

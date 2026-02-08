@@ -16,7 +16,7 @@ WORKDIR /app
 
 COPY requirements.txt ./
 
-RUN pip install --no-cache-dir --user -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app/ ./app/
 
@@ -27,14 +27,14 @@ WORKDIR /app
 RUN addgroup --gid 1001 --system python && \
     adduser --system --uid 1001 --gid 1001 python
 
-COPY --from=backend-builder --chown=python:python /root/.local /home/python/.local
+COPY --from=backend-builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=backend-builder /usr/local/bin /usr/local/bin
 COPY --from=backend-builder --chown=python:python /app/app ./app
 COPY --from=frontend-builder --chown=python:python /app/frontend/dist ./frontend/dist
 
 USER python
 
-ENV PATH=/home/python/.local/bin:$PATH \
-    PYTHONUNBUFFERED=1 \
+ENV PYTHONUNBUFFERED=1 \
     PORT=8000 \
     MAX_FILE_SIZE=10485760 \
     MAX_FILES=12 \

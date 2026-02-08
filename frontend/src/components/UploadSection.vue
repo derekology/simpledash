@@ -134,18 +134,18 @@ const totalSize = computed(() => {
 }
 
 .drop-zone {
-    border: 2px dashed #dd3333;
+    border: 2px dashed var(--color-primary);
     border-radius: 8px;
     padding: 60px 20px;
     text-align: center;
-    background-color: #ffffff;
+    background-color: var(--color-bg-white);
     transition: all 0.3s ease;
     cursor: pointer;
 }
 
 .drop-zone.dragging {
     background-color: #fff5f5;
-    border-color: #aa2222;
+    border-color: var(--color-primary-dark);
 }
 
 .drop-zone-content {
@@ -158,25 +158,25 @@ const totalSize = computed(() => {
 .upload-icon {
     width: 64px;
     height: 64px;
-    color: #dd3333;
+    color: var(--color-primary);
 }
 
 .drop-text {
     font-size: 18px;
     font-weight: 600;
-    color: #222222;
+    color: var(--color-bg-dark);
     margin: 0;
 }
 
 .drop-subtext {
     font-size: 14px;
-    color: #666666;
+    color: var(--color-text-light);
     margin: 0;
 }
 
 .limits-text {
     font-size: 12px;
-    color: #999999;
+    color: var(--color-text-lighter);
     margin: 0;
     font-style: italic;
 }
@@ -188,8 +188,8 @@ const totalSize = computed(() => {
 .file-input-label {
     display: inline-block;
     padding: 12px 32px;
-    background-color: #dd3333;
-    color: #ffffff;
+    background-color: var(--color-primary);
+    color: var(--color-bg-white);
     border-radius: 6px;
     font-weight: 600;
     cursor: pointer;
@@ -197,12 +197,12 @@ const totalSize = computed(() => {
 }
 
 .file-input-label:hover {
-    background-color: #cc2222;
+    background-color: var(--color-primary-dark);
 }
 
 .selected-files {
     margin-top: 32px;
-    background-color: #ffffff;
+    background-color: var(--color-bg-white);
     padding: 24px;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -210,14 +210,14 @@ const totalSize = computed(() => {
 
 .selected-files h3 {
     margin: 0 0 8px 0;
-    color: #222222;
+    color: var(--color-bg-dark);
     font-size: 18px;
 }
 
 .total-size {
     margin: 0 0 16px 0;
     font-size: 14px;
-    color: #666666;
+    color: var(--color-text-light);
 }
 
 .file-list {
@@ -231,15 +231,15 @@ const totalSize = computed(() => {
     align-items: center;
     gap: 12px;
     padding: 12px;
-    background-color: #fafafa;
-    border: 1px solid #e0e0e0;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border-light);
     border-radius: 6px;
     margin-bottom: 8px;
 }
 
 .file-name {
     flex: 1;
-    color: #222222;
+    color: var(--color-bg-dark);
     font-weight: 500;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -247,14 +247,14 @@ const totalSize = computed(() => {
 }
 
 .file-size {
-    color: #666666;
+    color: var(--color-text-light);
     font-size: 14px;
 }
 
 .remove-btn {
     background: none;
     border: none;
-    color: #dd3333;
+    color: var(--color-primary);
     font-size: 28px;
     line-height: 1;
     cursor: pointer;
@@ -268,14 +268,14 @@ const totalSize = computed(() => {
 }
 
 .remove-btn:hover {
-    color: #aa2222;
+    color: var(--color-primary-dark);
 }
 
 .upload-btn {
     width: 100%;
     padding: 14px;
-    background-color: #dd3333;
-    color: #ffffff;
+    background-color: var(--color-primary);
+    color: var(--color-bg-white);
     border: none;
     border-radius: 6px;
     font-size: 16px;
@@ -286,11 +286,11 @@ const totalSize = computed(() => {
 }
 
 .upload-btn:hover {
-    background-color: #cc2222;
+    background-color: var(--color-primary-dark);
 }
 
 .upload-btn:disabled {
-    background-color: #cccccc;
+    background-color: var(--color-border-light);
     cursor: not-allowed;
 }
 
@@ -299,7 +299,7 @@ const totalSize = computed(() => {
     width: 100%;
     background: none;
     border: none;
-    color: #666666;
+    color: var(--color-text-light);
     font-size: 14px;
     text-align: center;
     cursor: pointer;
@@ -308,6 +308,6 @@ const totalSize = computed(() => {
 }
 
 .back-link:hover {
-    color: #dd3333;
+    color: var(--color-primary);
 }
 </style>

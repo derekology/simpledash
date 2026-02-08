@@ -1,55 +1,44 @@
+@import url('https://derekw.co/derekw-theme.css');
+
 :root {
-    --color-primary: #dd3333;
-    --color-primary-dark: #bb2a2a;
-    --color-primary-light: #ff5555;
+    --color-primary: var(--brand-primary);
+    --color-primary-dark: var(--brand-primary-dark);
+    --color-primary-light: var(--brand-primary-light);
 
-    --color-bg: #f5f5f5;
+    --color-bg: var(--bg-page);
     --color-bg-white: #ffffff;
-    --color-bg-dark: #222222;
-    --color-bg-hover: #444444;
-    --color-bg-light: #eeeeee;
+    --color-bg-dark: var(--bg-page-dark);
+    --color-bg-hover: var(--bg-hover);
+    --color-bg-light: var(--bg-subtle);
+    --color-bg-warning-gradient: var(--bg-warning-gradient);
+    --color-bg-info-gradient: var(--bg-info-gradient);
 
-    --color-text: #333333;
-    --color-text-light: #666666;
-    --color-text-lighter: #999999;
+    --color-text: var(--text-primary);
+    --color-text-light: var(--text-secondary);
+    --color-text-lighter: var(--text-tertiary);
     --color-text-white: #ffffff;
-    --color-text-muted: #bbbbbb;
+    --color-text-muted: var(--text-muted);
 
-    --color-border: #dddddd;
-    --color-border-light: #f0f0f0;
+    --color-border: var(--border-medium);
+    --color-border-light: var(--border-light);
+    --color-border-dark: var(--border-dark);
 
-    --color-success: #4caf50;
-    --color-warning: #ff9800;
-    --color-warning-bg: #fff3e0;
-    --color-warning-bg-alt: #ffe0b2;
-    --color-danger: #d32f2f;
-    --color-danger-light: rgba(211, 47, 47, 0.3);
-    --color-danger-hover: rgba(211, 47, 47, 0.5);
+    --color-success: var(--status-success);
+    --color-info: var(--status-info);
+    --color-warning: var(--status-warning);
+    --color-warning-bg: var(--status-warning-bg);
+    --color-warning-bg-alt: var(--status-warning-bg-alt);
+    --color-danger: var(--status-danger);
+    --color-danger-light: var(--status-danger-light);
+    --color-danger-hover: var(--status-danger-hover);
 
-    --color-info-bg: #e8f4f8;
-    --color-note: #ffd54f;
-    --color-note-alt: #ffca28;
+    --color-info-bg: var(--info-bg);
+    --color-note: var(--note-primary);
+    --color-note-alt: var(--note-secondary);
 
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 4px 12px rgba(0, 0, 0, 0.15);
-
-    --radius-sm: 4px;
-    --radius-md: 6px;
-    --radius-lg: 8px;
-    --radius-xl: 12px;
-
-    --transition-fast: 0.15s ease;
-    --transition-normal: 0.2s ease;
-    --transition-slow: 0.3s ease;
-
-    --spacing-xs: 0.25rem;
-    --spacing-sm: 0.5rem;
-    --spacing-md: 1rem;
-    --spacing-lg: 1.5rem;
-    --spacing-xl: 2rem;
-
-    --top-bar-height: 50px;
+    --top-bar-height: var(--height-topbar);
+    
+    --slow-transition: var(--transition-slow);
 }
 
 * {
@@ -63,7 +52,7 @@ body {
 }
 
 button {
-    transition: var(--transition-normal);
+    transition: var(--transition-fast);
 }
 
 button:hover:not(:disabled) {
@@ -73,7 +62,7 @@ button:hover:not(:disabled) {
 input,
 textarea,
 select {
-    transition: var(--transition-normal);
+    transition: var(--transition-fast);
 }
 
 input:focus,
@@ -83,7 +72,7 @@ select:focus {
 }
 
 a {
-    color: #dd3333;
+    color: var(--brand-primary);
     font-weight: 600;
     text-decoration: none;
 }

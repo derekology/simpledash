@@ -1034,7 +1034,7 @@ const trendChartOptions = {
 
 <style scoped>
 .main-content {
-  background-color: #fafafa;
+  background-color: var(--color-bg);
 }
 
 .content-wrapper {
@@ -1044,7 +1044,7 @@ const trendChartOptions = {
 }
 
 .failed-upload-banner {
-  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  background: var(--color-bg-warning-gradient);
   padding: 0.5rem 1rem;
   text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -1076,7 +1076,7 @@ const trendChartOptions = {
   gap: 0;
   margin-bottom: 32px;
   justify-content: start;
-  border-bottom: 3px solid #e0e0e0;
+  border-bottom: 3px solid var(--color-border-light);
 }
 
 .view-tab {
@@ -1086,19 +1086,19 @@ const trendChartOptions = {
   border-bottom: 3px solid transparent;
   font-size: 16px;
   font-weight: 600;
-  color: #666666;
+  color: var(--color-text-light);
   cursor: pointer;
   transition: all 0.2s ease;
   margin-bottom: -3px;
 }
 
 .view-tab:hover {
-  color: #dd3333;
+  color: var(--color-primary);
 }
 
 .view-tab.active {
-  color: #dd3333;
-  border-bottom-color: #dd3333;
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
 }
 
 .campaign-selector {
@@ -1107,7 +1107,7 @@ const trendChartOptions = {
 }
 
 .campaign-info {
-  background-color: #ffffff;
+  background-color: var(--color-bg-white);
   padding: 24px;
   border-radius: 8px;
   margin-bottom: 24px;
@@ -1129,7 +1129,7 @@ const trendChartOptions = {
 .info-label {
   font-size: 12px;
   font-weight: 600;
-  color: #666666;
+  color: var(--color-text-light);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -1137,7 +1137,7 @@ const trendChartOptions = {
 .info-value {
   font-size: 16px;
   font-weight: 600;
-  color: #222222;
+  color: var(--color-bg-dark);
 }
 
 .metrics-section {
@@ -1164,22 +1164,22 @@ const trendChartOptions = {
 }
 
 .stat-card {
-  background-color: #ffffff;
+  background-color: var(--color-bg-white);
   padding: 20px;
   border-radius: 8px;
-  border-left: 4px solid #dd3333;
+  border-left: 4px solid var(--color-primary);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .stat-card.negative {
-  border-left-color: #666666;
+  border-left-color: var(--color-text-light);
 }
 
 .stat-header h3 {
   margin: 0 0 12px 0;
   font-size: 14px;
   font-weight: 600;
-  color: #666666;
+  color: var(--color-text-light);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -1187,24 +1187,24 @@ const trendChartOptions = {
 .stat-value {
   font-size: 32px;
   font-weight: 700;
-  color: #222222;
+  color: var(--color-bg-dark);
   margin-bottom: 4px;
 }
 
 .stat-rate {
   font-size: 16px;
   font-weight: 500;
-  color: #dd3333;
+  color: var(--color-primary);
 }
 
 .stat-card.negative .stat-rate {
-  color: #666666;
+  color: var(--color-text-light);
 }
 
 .section-title {
   font-size: 24px;
   font-weight: 700;
-  color: #222222;
+  color: var(--color-bg-dark);
   margin: 0 0 24px 0;
 }
 
@@ -1215,7 +1215,7 @@ const trendChartOptions = {
 }
 
 .chart-card {
-  background-color: #ffffff;
+  background-color: var(--color-bg-white);
   padding: 24px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -1242,18 +1242,18 @@ const trendChartOptions = {
 }
 
 .summary-card {
-  background-color: #ffffff;
+  background-color: var(--color-bg-white);
   padding: 20px 32px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
-  border-top: 4px solid #dd3333;
+  border-top: 4px solid var(--color-primary);
 }
 
 .summary-label {
   font-size: 12px;
   font-weight: 600;
-  color: #666666;
+  color: var(--color-text-light);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 8px;
@@ -1262,7 +1262,7 @@ const trendChartOptions = {
 .summary-value {
   font-size: 36px;
   font-weight: 700;
-  color: #dd3333;
+  color: var(--color-primary);
 }
 
 .chart-header {
@@ -1277,7 +1277,7 @@ const trendChartOptions = {
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: #222222;
+  color: var(--color-bg-dark);
 }
 
 .chart-metrics-group {
@@ -1298,7 +1298,7 @@ const trendChartOptions = {
 .metric-label {
   font-size: 12px;
   font-weight: 600;
-  color: #666666;
+  color: var(--color-text-light);
   text-transform: uppercase;
   letter-spacing: 0.3px;
 }
@@ -1315,12 +1315,12 @@ const trendChartOptions = {
 
 .section-description {
   font-size: 14px;
-  color: #666666;
+  color: var(--color-text-light);
   margin: -16px 0 24px 0;
 }
 
 .heatmap-container {
-  background-color: #ffffff;
+  background-color: var(--color-bg-white);
   padding: 32px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -1345,7 +1345,7 @@ const trendChartOptions = {
   justify-content: flex-end;
   padding-right: 8px;
   font-size: 11px;
-  color: #666666;
+  color: var(--color-text-light);
   font-weight: 500;
   min-width: 45px;
 }
@@ -1366,7 +1366,7 @@ const trendChartOptions = {
 .x-axis-label {
   text-align: center;
   font-size: 12px;
-  color: #666666;
+  color: var(--color-text-light);
   font-weight: 600;
 }
 
@@ -1392,13 +1392,13 @@ const trendChartOptions = {
   justify-content: center;
   border-radius: 4px;
   transition: transform 0.2s ease;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--color-border-light);
 }
 
 .cell-value {
   font-size: 11px;
   font-weight: 600;
-  color: #222222;
+  color: var(--color-bg-dark);
 }
 
 .heatmap-legend {
@@ -1408,13 +1408,13 @@ const trendChartOptions = {
   gap: 16px;
   margin-top: 24px;
   padding-top: 24px;
-  border-top: 1px solid #e0e0e0;
+  border-top: 1px solid var(--color-border-light);
 }
 
 .legend-label {
   font-size: 14px;
   font-weight: 600;
-  color: #666666;
+  color: var(--color-text-light);
 }
 
 .legend-gradient {
@@ -1430,12 +1430,12 @@ const trendChartOptions = {
       rgba(221, 51, 51, 0.2) 0%,
       rgba(221, 51, 51, 1) 100%);
   border-radius: 4px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--color-border-light);
 }
 
 .legend-text {
   font-size: 12px;
-  color: #666666;
+  color: var(--color-text-light);
 }
 
 @media (max-width: 768px) {

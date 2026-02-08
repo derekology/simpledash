@@ -186,7 +186,8 @@ const viewDashboard = () => {
                             </div>
                         </li>
                     </ul>
-                    <button v-if="hasDataInSession()" @click="viewDashboard" class="dashboard-btn">Go to Dashboard</button>
+                    <button v-if="hasDataInSession()" @click="viewDashboard" class="dashboard-btn">Go to
+                        Dashboard</button>
                 </div>
 
                 <div v-if="uploadResults.errors && uploadResults.errors.length > 0"
@@ -217,7 +218,7 @@ const viewDashboard = () => {
     min-height: calc(100vh - var(--top-bar-height));
     justify-content: center;
     align-items: center;
-    background-color: #fafafa;
+    background-color: var(--color-bg);
 }
 
 .content-wrapper {
@@ -229,14 +230,14 @@ const viewDashboard = () => {
 .page-title {
     font-size: 36px;
     font-weight: 700;
-    color: #222222;
+    color: var(--color-bg-dark);
     margin: 0 0 12px 0;
     text-align: center;
 }
 
 .page-description {
     font-size: 16px;
-    color: #666666;
+    color: var(--color-text-light);
     margin: 0 0 48px 0;
     text-align: center;
 }
@@ -248,24 +249,24 @@ const viewDashboard = () => {
     display: flex;
     align-items: center;
     gap: 16px;
-    background-color: #ffffff;
+    background-color: var(--color-bg-white);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .status-message.uploading {
-    color: #222222;
+    color: var(--color-bg-dark);
 }
 
 .status-message.error {
     background-color: #fff5f5;
-    color: #dd3333;
-    border: 1px solid #dd3333;
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
 }
 
 .status-message.warning {
-    background-color: #fffbf0;
-    color: #ff9800;
-    border: 1px solid #ff9800;
+    background-color: var(--color-bg-warning-gradient);
+    color: var(--color-warning);
+    border: 1px solid var(--color-warning);
 }
 
 .status-message svg {
@@ -281,8 +282,8 @@ const viewDashboard = () => {
 .spinner {
     width: 24px;
     height: 24px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #dd3333;
+    border: 3px solid var(--color-border-light);
+    border-top: 3px solid var(--color-primary);
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
@@ -304,13 +305,13 @@ const viewDashboard = () => {
 .results-title {
     font-size: 28px;
     font-weight: 700;
-    color: #222222;
+    color: var(--color-bg-dark);
     margin: 0 0 24px 0;
     text-align: center;
 }
 
 .results-section {
-    background-color: #ffffff;
+    background-color: var(--color-bg-white);
     padding: 24px;
     border-radius: 8px;
     margin-bottom: 24px;
@@ -319,17 +320,17 @@ const viewDashboard = () => {
 
 .results-section h3 {
     margin: 0 0 16px 0;
-    color: #222222;
+    color: var(--color-bg-dark);
     font-size: 18px;
     font-weight: 600;
 }
 
 .results-section.success {
-    border-left: 4px solid #4caf50;
+    border-left: 4px solid var(--color-success);
 }
 
 .results-section.error-section {
-    border-left: 4px solid #dd3333;
+    border-left: 4px solid var(--color-primary);
 }
 
 .results-list {
@@ -341,8 +342,8 @@ const viewDashboard = () => {
 .dashboard-btn {
     width: 100%;
     padding: 14px;
-    background-color: #dd3333;
-    color: #ffffff;
+    background-color: var(--color-primary);
+    color: var(--color-bg-white);
     border: none;
     border-radius: 6px;
     font-size: 16px;
@@ -360,7 +361,7 @@ const viewDashboard = () => {
     align-items: flex-start;
     gap: 12px;
     padding: 12px;
-    background-color: #fafafa;
+    background-color: var(--color-bg);
     border-radius: 6px;
     margin-bottom: 8px;
 }
@@ -368,7 +369,7 @@ const viewDashboard = () => {
 .check-icon {
     width: 20px;
     height: 20px;
-    color: #4caf50;
+    color: var(--color-success);
     flex-shrink: 0;
     margin-top: 2px;
 }
@@ -376,7 +377,7 @@ const viewDashboard = () => {
 .error-icon {
     width: 20px;
     height: 20px;
-    color: #dd3333;
+    color: var(--color-primary);
     flex-shrink: 0;
     margin-top: 2px;
 }
@@ -390,16 +391,16 @@ const viewDashboard = () => {
 
 .result-filename {
     font-weight: 600;
-    color: #222222;
+    color: var(--color-bg-dark);
 }
 
 .result-details {
     font-size: 14px;
-    color: #666666;
+    color: var(--color-text-light);
 }
 
 .result-error {
     font-size: 14px;
-    color: #dd3333;
+    color: var(--color-primary);
 }
 </style>

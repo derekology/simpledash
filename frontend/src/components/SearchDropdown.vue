@@ -23,8 +23,8 @@ const searchQuery = ref('')
 const filteredOptions = computed(() => {
   if (!searchQuery.value) return props.options
   const query = searchQuery.value.toLowerCase()
-  return props.options.filter(opt => 
-    opt.label.toLowerCase().includes(query) || 
+  return props.options.filter(opt =>
+    opt.label.toLowerCase().includes(query) ||
     (opt.subtitle && opt.subtitle.toLowerCase().includes(query))
   )
 })
@@ -75,28 +75,17 @@ watch(isOpen, (open) => {
         <span class="trigger-label">{{ selectedOption?.label || placeholder || 'Select...' }}</span>
         <span v-if="selectedOption?.subtitle" class="trigger-subtitle">{{ selectedOption.subtitle }}</span>
       </div>
-      <svg class="dropdown-icon" :class="{ open: isOpen }" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <svg class="dropdown-icon" :class="{ open: isOpen }" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" stroke-width="2">
         <polyline points="6 9 12 15 18 9" />
       </svg>
     </button>
-    
+
     <div v-if="isOpen" class="dropdown-menu">
-      <input 
-        v-model="searchQuery" 
-        type="text" 
-        class="dropdown-search" 
-        placeholder="Search..."
-        @click.stop
-      />
+      <input v-model="searchQuery" type="text" class="dropdown-search" placeholder="Search..." @click.stop />
       <div class="dropdown-options">
-        <button 
-          v-for="option in filteredOptions" 
-          :key="option.value"
-          class="dropdown-option"
-          :class="{ selected: option.value === modelValue }"
-          @click.stop="selectOption(option.value)"
-          type="button"
-        >
+        <button v-for="option in filteredOptions" :key="option.value" class="dropdown-option"
+          :class="{ selected: option.value === modelValue }" @click.stop="selectOption(option.value)" type="button">
           <span class="option-label">{{ option.label }}</span>
           <span v-if="option.subtitle" class="option-subtitle">{{ option.subtitle }}</span>
         </button>
@@ -117,8 +106,8 @@ watch(isOpen, (open) => {
 .dropdown-trigger {
   width: 100%;
   padding: 12px 16px;
-  background-color: #ffffff;
-  border: 2px solid #e0e0e0;
+  background-color: var(--color-bg-white);
+  border: 2px solid var(--color-border-light);
   border-radius: 6px;
   cursor: pointer;
   display: flex;
@@ -129,7 +118,7 @@ watch(isOpen, (open) => {
 }
 
 .dropdown-trigger:hover {
-  border-color: #dd3333;
+  border-color: var(--color-primary);
 }
 
 .trigger-content {
@@ -142,18 +131,18 @@ watch(isOpen, (open) => {
 
 .trigger-label {
   font-weight: 600;
-  color: #222222;
+  color: var(--color-bg-dark);
 }
 
 .trigger-subtitle {
   font-size: 14px;
-  color: #666666;
+  color: var(--color-text-light);
 }
 
 .dropdown-icon {
   width: 20px;
   height: 20px;
-  color: #666666;
+  color: var(--color-text-light);
   transition: transform 0.2s ease;
   flex-shrink: 0;
 }
@@ -167,8 +156,8 @@ watch(isOpen, (open) => {
   top: calc(100% + 8px);
   left: 0;
   right: 0;
-  background-color: #ffffff;
-  border: 2px solid #e0e0e0;
+  background-color: var(--color-bg-white);
+  border: 2px solid var(--color-border-light);
   border-radius: 6px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 1000;
@@ -180,13 +169,13 @@ watch(isOpen, (open) => {
 .dropdown-search {
   padding: 12px 16px;
   border: none;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 2px solid var(--color-border-light);
   font-size: 14px;
   outline: none;
 }
 
 .dropdown-search:focus {
-  border-bottom-color: #dd3333;
+  border-bottom-color: var(--color-primary);
 }
 
 .dropdown-options {
@@ -208,28 +197,28 @@ watch(isOpen, (open) => {
 }
 
 .dropdown-option:hover {
-  background-color: #fafafa;
+  background-color: var(--color-bg);
 }
 
 .dropdown-option.selected {
   background-color: #fff5f5;
-  border-left: 4px solid #dd3333;
+  border-left: 4px solid var(--color-primary);
 }
 
 .option-label {
   font-weight: 600;
-  color: #222222;
+  color: var(--color-bg-dark);
 }
 
 .option-subtitle {
   font-size: 14px;
-  color: #666666;
+  color: var(--color-text-light);
 }
 
 .no-results {
   padding: 24px;
   text-align: center;
-  color: #999999;
+  color: var(--color-text-lighter);
   font-style: italic;
 }
 </style>

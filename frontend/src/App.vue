@@ -88,7 +88,7 @@ function goBack() {
   cursor: pointer;
   pointer-events: auto;
   font-style: italic;
-  transition: var(--transition-normal);
+  transition: var(--slow-transition);
 }
 
 .byline:hover {
@@ -109,7 +109,7 @@ function goBack() {
   background: var(--color-bg-dark);
   color: var(--color-text-white);
   cursor: pointer;
-  transition: var(--transition-normal);
+  transition: var(--slow-transition);
 }
 
 .nav-button:hover {

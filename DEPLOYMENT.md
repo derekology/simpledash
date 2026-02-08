@@ -283,7 +283,7 @@ http {
 
 ```bash
 # Check application health
-curl http://localhost:8000/docs
+curl http://localhost:8000/health
 
 # Check container health
 docker inspect --format='{{.State.Health.Status}}' simple-dash

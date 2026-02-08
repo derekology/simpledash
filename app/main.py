@@ -7,11 +7,12 @@ from app.parsers.detector import detect_and_parse
 from typing import List, Dict
 from datetime import datetime
 
-DEV = True
-MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
-MAX_FILES = 12
+# Configuration from environment variables
+DEV = os.getenv("DEV", "False").lower() in ("true", "1", "yes")
+MAX_FILE_SIZE = int(os.getenv("MAX_FILE_SIZE", str(10 * 1024 * 1024)))  # Default: 10MB
+MAX_FILES = int(os.getenv("MAX_FILES", "12"))  # Default: 12
 
-app = FastAPI()
+app = FastAPI(title="Simple Dash", description="Email campaign analytics tool", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -59,15 +60,55 @@ async def parse_report(files: List[UploadFile] = File(...)):
             })
             continue
         
-        text = contents.decode("utf-8", errors="ignore")
+        try:
+            text = contents.decode("utf-8", errors="ignore")
+        except Exception as e:
+            errors.append({
+                "filename": file.filename,
+                "error": f"Failed to decode file: {str(e)}"
+            })
+            continue
 
         try:
             result = detect_and_parse(text)
+            
+            # Validate that parsing returned actual data
+            if not result:
+                errors.append({
+                    "filename": file.filename,
+                    "error": "Failed to parse: No data returned from parser"
+                })
+                continue
             
             # Handle both single campaign and multiple campaigns
             if "campaign" in result:
                 # Single campaign (MailerLite Classic)
                 campaign = result["campaign"]
+                
+                if not campaign:
+                    errors.append({
+                        "filename": file.filename,
+                        "error": "Failed to parse: Empty campaign data"
+                    })
+                    continue
+                
+                # Validate that campaign has at least some meaningful data
+                # Check if key fields have actual values (not all None)
+                has_data = any([
+                    campaign.get("subject"),
+                    campaign.get("delivered"),
+                    campaign.get("opens"),
+                    campaign.get("clicks"),
+                    campaign.get("sent_at")
+                ])
+                
+                if not has_data:
+                    errors.append({
+                        "filename": file.filename,
+                        "error": "Failed to parse: No valid campaign data found in file"
+                    })
+                    continue
+                
                 unique_id = campaign.get("unique_id")
                 
                 if unique_id:
@@ -84,7 +125,36 @@ async def parse_report(files: List[UploadFile] = File(...)):
                     
             elif "campaigns" in result:
                 # Multiple campaigns (MailChimp)
-                for campaign in result["campaigns"]:
+                campaigns = result["campaigns"]
+                
+                if not campaigns or len(campaigns) == 0:
+                    errors.append({
+                        "filename": file.filename,
+                        "error": "Failed to parse: No campaigns found in file"
+                    })
+                    continue
+                
+                # Validate each campaign has meaningful data
+                valid_campaigns = []
+                for campaign in campaigns:
+                    has_data = any([
+                        campaign.get("subject"),
+                        campaign.get("delivered"),
+                        campaign.get("opens"),
+                        campaign.get("clicks"),
+                        campaign.get("sent_at")
+                    ])
+                    if has_data:
+                        valid_campaigns.append(campaign)
+                
+                if len(valid_campaigns) == 0:
+                    errors.append({
+                        "filename": file.filename,
+                        "error": "Failed to parse: No valid campaign data found in file"
+                    })
+                    continue
+                
+                for campaign in valid_campaigns:
                     unique_id = campaign.get("unique_id")
                     
                     if unique_id:
@@ -98,13 +168,20 @@ async def parse_report(files: List[UploadFile] = File(...)):
                             "filename": file.filename,
                             "data": {"campaign": campaign}
                         })
+            else:
+                # Neither 'campaign' nor 'campaigns' in result
+                errors.append({
+                    "filename": file.filename,
+                    "error": "Failed to parse: Unknown data format returned"
+                })
+                continue
             
             file_index += 1
             
         except Exception as e:
             errors.append({
                 "filename": file.filename,
-                "error": str(e)
+                "error": f"Failed to parse: {str(e)}"
             })
     
     # Add deduplicated campaigns to results
@@ -120,6 +197,17 @@ async def parse_report(files: List[UploadFile] = File(...)):
         "results": results,
         "errors": errors
     }
+
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for Docker and monitoring"""
+    return {
+        "status": "healthy",
+        "max_file_size": MAX_FILE_SIZE,
+        "max_files": MAX_FILES
+    }
+
 
 if os.path.exists("frontend/dist"):
     app.mount("/assets", StaticFiles(directory="frontend/dist/assets"), name="assets")

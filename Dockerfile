@@ -38,11 +38,12 @@ USER python
 ENV PYTHONUNBUFFERED=1 \
     PORT=8000 \
     MAX_FILE_SIZE=10485760 \
-    MAX_FILES=12
+    MAX_FILES=12 \
+    DEV=False
 
 EXPOSE $PORT
 
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:' + str(${PORT:-8000}) + '/docs').read()" || exit 1
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:${PORT:-8000}/health').read()" || exit 1
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}

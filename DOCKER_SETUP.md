@@ -71,6 +71,7 @@ Configure the application using environment variables:
 | `PORT` | `8000` | Server port |
 | `MAX_FILE_SIZE` | `10485760` | Maximum file size in bytes (10MB) |
 | `MAX_FILES` | `12` | Maximum files per upload |
+| `DEV` | `False` | Development mode (enables CORS, etc.) |
 
 ### Setting Environment Variables
 

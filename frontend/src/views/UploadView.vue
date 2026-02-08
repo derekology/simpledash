@@ -95,19 +95,35 @@ const handleUpload = async () => {
         const data = await response.json()
         uploadResults.value = data
 
-        if (data.errors && data.errors.length > 0) {
+        // Check if we have any successful results
+        const hasResults = data.results && data.results.length > 0
+        const hasErrors = data.errors && data.errors.length > 0
+
+        if (hasErrors) {
             sessionStorage.setItem('failedUploads', JSON.stringify(data.errors))
         }
 
-        if (data.results && data.results.length > 0) {
+        if (hasResults) {
             const campaigns = data.results
                 .filter((r: UploadResult) => r.data?.campaign)
                 .map((r: UploadResult) => r.data!.campaign!)
 
             if (campaigns.length > 0) {
                 sessionStorage.setItem('campaigns', JSON.stringify(campaigns))
+
+                // If we have errors but also results, we'll still go to dashboard
+                // but the banner will show the errors
                 router.push({ name: 'dashboard' })
+            } else if (hasErrors) {
+                // No valid campaigns, only show error message
+                uploadError.value = 'All files failed to parse. Please check the errors below.'
             }
+        } else if (hasErrors) {
+            // No results at all, only errors
+            uploadError.value = 'All files failed to parse. Please check the errors below.'
+        } else {
+            // No results and no errors - weird state
+            uploadError.value = 'No data was parsed from the uploaded files.'
         }
     } catch (error) {
         uploadError.value = error instanceof Error ? error.message : 'Upload failed'
@@ -222,7 +238,7 @@ const viewDashboard = () => {
 }
 
 .content-wrapper {
-    max-width: 1200px;
+    max-width: 800px;
     padding: 32px;
     margin: 0 auto;
 }

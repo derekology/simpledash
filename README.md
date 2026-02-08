@@ -251,8 +251,20 @@ Upload and parse CSV files
 **Response:**
 ```json
 {
-  "campaigns": [...],
+  "results": [...],
   "errors": [...]
+}
+```
+
+### GET /health
+Health check endpoint
+
+**Response:**
+```json
+{
+  "status": "healthy",
+  "max_file_size": 10485760,
+  "max_files": 12
 }
 ```
 

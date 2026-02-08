@@ -214,9 +214,13 @@ if os.path.exists("frontend/dist"):
     
     @app.get("/favicon.ico")
     async def serve_favicon():
-        favicon_path = "frontend/public/favicon.ico"
-        if os.path.exists(favicon_path):
-            return FileResponse(favicon_path)
+        dist_favicon = "frontend/dist/favicon.ico"
+        if os.path.exists(dist_favicon):
+            return FileResponse(dist_favicon)
+        
+        public_favicon = "frontend/public/favicon.ico"
+        if os.path.exists(public_favicon):
+            return FileResponse(public_favicon)
         raise HTTPException(status_code=404, detail="Favicon not found")
     
     @app.get("/{full_path:path}")

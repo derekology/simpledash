@@ -12,7 +12,14 @@ DEV = os.getenv("DEV", "False").lower() in ("true", "1", "yes")
 MAX_FILE_SIZE = int(os.getenv("MAX_FILE_SIZE", str(10 * 1024 * 1024)))  # Default: 10MB
 MAX_FILES = int(os.getenv("MAX_FILES", "12"))  # Default: 12
 
-app = FastAPI(title="Simple Dash", description="Email campaign analytics tool", version="1.0.0")
+app = FastAPI(
+    title="Simple Dash",
+    description="Email campaign analytics tool",
+    version="1.0.0",
+    docs_url=None,  # Disable /docs
+    redoc_url=None,  # Disable /redoc
+    openapi_url=None  # Disable /openapi.json
+)
 
 app.add_middleware(
     CORSMiddleware,

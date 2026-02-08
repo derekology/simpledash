@@ -21,16 +21,19 @@
 ### Using Docker (Recommended)
 
 **Linux/Mac:**
+
 ```bash
 ./start.sh
 ```
 
 **Windows:**
+
 ```cmd
 start.bat
 ```
 
 **Or manually:**
+
 ```bash
 docker compose up -d
 ```
@@ -40,6 +43,7 @@ Access the application at `http://localhost:8000`
 ### Manual Installation
 
 **Backend:**
+
 ```bash
 # Install Python dependencies
 python3 -m venv .venv
@@ -51,6 +55,7 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 **Frontend:**
+
 ```bash
 # Install Node dependencies
 cd frontend
@@ -67,18 +72,19 @@ npm run build
 
 - [Docker Setup Guide](DOCKER_SETUP.md) - Comprehensive Docker documentation
 - [Deployment Guide](DEPLOYMENT.md) - Production deployment instructions
-- [API Documentation](http://localhost:8000/docs) - FastAPI interactive docs (when running)
 
 ## 🏗️ Architecture
 
 ### Tech Stack
 
 **Backend:**
+
 - FastAPI (Python 3.11)
 - Pandas for CSV parsing
 - Uvicorn ASGI server
 
 **Frontend:**
+
 - Vue.js 3 with TypeScript
 - Vue Router
 - Chart.js / Vue-ChartJS
@@ -112,13 +118,14 @@ simple-dash/
 
 ### Environment Variables
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `PORT` | `8000` | Server port |
+| Variable        | Default    | Description          |
+| --------------- | ---------- | -------------------- |
+| `PORT`          | `8000`     | Server port          |
 | `MAX_FILE_SIZE` | `10485760` | Max file size (10MB) |
-| `MAX_FILES` | `12` | Max files per upload |
+| `MAX_FILES`     | `12`       | Max files per upload |
 
 Create a `.env` file:
+
 ```env
 PORT=8000
 MAX_FILE_SIZE=10485760
@@ -128,11 +135,13 @@ MAX_FILES=12
 ## 📊 Supported Platforms
 
 ### MailChimp
+
 - Export campaign reports as CSV
 - Multiple campaigns per file supported
 - Automatic deduplication by unique ID
 
 ### MailerLite Classic
+
 - Export campaign reports as CSV
 - Single or multiple campaigns
 
@@ -203,12 +212,6 @@ cp .env.example .env
 
 # 2. Build and start
 docker compose up -d
-
-# 3. Set up nginx reverse proxy
-# (see DEPLOYMENT.md for nginx config)
-
-# 4. Get SSL certificate
-sudo certbot --nginx -d dash.example.com
 ```
 
 ## 🛠️ Development
@@ -216,11 +219,13 @@ sudo certbot --nginx -d dash.example.com
 ### Run in Development Mode
 
 **Backend:**
+
 ```bash
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 **Frontend:**
+
 ```bash
 cd frontend
 npm run dev
@@ -242,13 +247,16 @@ uvicorn app.main:app --host 0.0.0.0 --port 8000
 ## 📝 API Endpoints
 
 ### POST /parse
+
 Upload and parse CSV files
 
 **Request:**
+
 - Content-Type: `multipart/form-data`
 - Body: Multiple CSV files (max 12)
 
 **Response:**
+
 ```json
 {
   "results": [...],
@@ -257,9 +265,11 @@ Upload and parse CSV files
 ```
 
 ### GET /health
+
 Health check endpoint
 
 **Response:**
+
 ```json
 {
   "status": "healthy",
@@ -268,10 +278,8 @@ Health check endpoint
 }
 ```
 
-### GET /docs
-Interactive API documentation (Swagger UI)
-
 ### GET /
+
 Serve frontend application
 
 ## 🧪 Testing
@@ -300,7 +308,7 @@ Contributions are welcome! Please:
 
 ## 📄 License
 
-[Add your license here]
+ISC
 
 ## ⚠️ Disclaimer
 
@@ -315,10 +323,5 @@ Simple Dash is provided "as-is" without warranties. Files are sent to the server
 ## 📧 Support
 
 For issues or questions:
+
 - Open an issue on GitHub
-- Check the documentation
-- Review API docs at `/docs` endpoint
-
----
-
-Made with ❤️ for privacy-conscious email marketers

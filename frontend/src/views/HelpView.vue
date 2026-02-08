@@ -12,19 +12,18 @@
                 <div class="value-prop">
                     <div class="icon">📊</div>
                     <h3>Instant Insights</h3>
-                    <p>Upload your campaign reports and instantly see trends, metrics, and performance comparisons
-                        across all your email campaigns.</p>
+                    <p>Upload your campaign reports and instantly see trends, metrics, and performance comparisons.</p>
                 </div>
                 <div class="value-prop">
                     <div class="icon">🔒</div>
                     <h3>Privacy First</h3>
-                    <p>Files are parsed on the server and immediately discarded. No campaign data is permanently stored
-                        - everything lives in your browser's session storage only.</p>
+                    <p>Files immediately discarded after being parsed. No campaign data is permanently stored on our
+                        servers.</p>
                 </div>
                 <div class="value-prop">
                     <div class="icon">🚀</div>
                     <h3>No Setup Required</h3>
-                    <p>No accounts, no tracking, no cookies. Just upload your CSV files and view your dashboard
+                    <p>No accounts needed. Just upload your CSV reports and view your dashboard
                         instantly.</p>
                 </div>
             </div>
@@ -57,10 +56,10 @@
             <div class="platforms-grid">
                 <div class="platform-card">
                     <h3>MailChimp</h3>
-                    <p>Export your campaign reports as CSV files from the MailChimp dashboard. Each CSV can
-                        contain
-                        multiple campaigns, and duplicate campaigns (based on unique ID) will be automatically
-                        deduplicated using the most recent upload.</p>
+                    <p>Export your individual, A/B test, or aggregated campaign reports as CSV files from the MailChimp
+                        audience. If a campaign is in multiple reports (based on unique ID), the metrics from the most
+                        recent
+                        upload will be used.</p>
                 </div>
                 <div class="platform-card">
                     <h3>MailerLite Classic</h3>
@@ -214,7 +213,6 @@
 
 .help-section h3 {
     font-size: 1.3rem;
-    color: var(--color-text);
     margin: 0 0 0.75rem 0;
 }
 
@@ -281,7 +279,7 @@
 
 .platform-card {
     padding: var(--spacing-lg);
-    border: 2px solid var(--color-border-dark);
+    border: 2px solid var(--color-border);
     border-radius: var(--radius-lg);
 }
 

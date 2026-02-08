@@ -1,4 +1,5 @@
 import re
+from app.parsers.id_generator import generate_unique_id
 
 def parse_kv(line: str):
     parts = [p.strip().strip('"') for p in line.split(",") if p.strip()]
@@ -108,8 +109,17 @@ def parse_mailerlite_classic(text: str):
     else:
         data["ctor"] = None
 
-    data["email_title"] = sanitize_title(data["subject"])
+    title = sanitize_title(data.get("subject", ""))
+    data["email_title"] = title
+    
+    # Generate unique ID based on subject and sent_at
+    data["unique_id"] = generate_unique_id(
+        title=title,
+        subject=data.get("subject", ""),
+        sent_at=data.get("sent_at", ""),
+        platform="mailerlite"
+    )
 
     return {
-        "campaign": data
+        "campaigns": [data]
     }

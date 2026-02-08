@@ -1,8 +1,9 @@
 import re
+from datetime import datetime
 from app.parsers.id_generator import generate_unique_id
 
 def parse_kv(line: str):
-    """Parse key-value pair from CSV format like '"Title:","Personal Styling (Amy 02)"'"""
+    """Parse key-value pair from CSV format like '"Title:","COVERUP-29-04-2021"'"""
     parts = [p.strip().strip('"') for p in line.split('","') if p.strip()]
     if len(parts) >= 2:
         key = parts[0].strip(':').strip()
@@ -12,7 +13,7 @@ def parse_kv(line: str):
 
 
 def extract_number_and_percent(value: str):
-    """Extract number and percentage from strings like '1 (100.0%)'"""
+    """Extract number and percentage from strings like '141 (8.1%)'"""
     if not value:
         return None, None
     
@@ -36,15 +37,10 @@ def sanitize_title(subject: str) -> str:
     return cleaned if cleaned else "Untitled"
 
 
-def parse_mailchimp(text: str):
-    """Parse MailChimp individual single campaign report"""
-    lines = [l.strip() for l in text.splitlines() if l.strip()]
-    
+def parse_combination(lines, start_idx):
+    """Parse a single combination's stats from the lines"""
     data = {
-        "platform": "mailchimp",
         "subject": None,
-        "email_title": None,
-        "unique_id": None,
         "sent_at": None,
         "delivered": None,
         "opens": None,
@@ -56,32 +52,20 @@ def parse_mailchimp(text: str):
         "spam_complaints": None,
         "bounces": None,
         "bounce_rate": None,
-        "hard_bounces": None,
-        "hard_bounce_rate": None,
-        "soft_bounces": None,
-        "soft_bounce_rate": None,
-        "ctor": None,
     }
     
-    campaign_title = None
-    
-    for line in lines:
-        # Stop parsing at "Clicks by URL" section
-        if line.startswith('"Clicks by URL"') or line.startswith('"URL"'):
+    idx = start_idx
+    while idx < len(lines):
+        line = lines[idx].strip()
+        
+        # Stop if we hit next combination or clicks section
+        if line.startswith('"Combination') or line.startswith('"URL"'):
             break
             
         key, val = parse_kv(line)
         
-        if not key:
-            continue
-        
-        if key == "Title":
-            campaign_title = val
-            data["unique_id"] = val
-        elif key == "Subject Line":
+        if key == "Subject Line":
             data["subject"] = val
-        elif key == "Delivery Date/Time":
-            data["sent_at"] = val
         elif key == "Successful Deliveries":
             data["delivered"] = int(val.replace(',', ''))
         elif key == "Recipients Who Opened":
@@ -100,27 +84,76 @@ def parse_mailchimp(text: str):
             num, pct = extract_number_and_percent(val)
             data["bounces"] = num
             data["bounce_rate"] = pct
+        
+        idx += 1
     
     # Calculate CTOR if we have data
     if data["opens"] and data["clicks"] and data["opens"] > 0:
         data["ctor"] = data["clicks"] / data["opens"]
+    else:
+        data["ctor"] = None
     
     # Calculate unsubscribe rate if we have delivered count
     if data["delivered"] and data["unsubscribes"] is not None and data["delivered"] > 0:
         data["unsubscribe_rate"] = data["unsubscribes"] / data["delivered"]
+    else:
+        data["unsubscribe_rate"] = None
     
-    # Set email title
-    title = sanitize_title(data.get("title", ""))
-    data["email_title"] = title
+    return data, idx
+
+
+def parse_mailchimp_ab(text: str):
+    """Parse MailChimp individual campaign report (A/B test or single campaign)"""
+    lines = [l.strip() for l in text.splitlines() if l.strip()]
     
-    # Generate unique ID based on title, subject, and send date
-    data["unique_id"] = generate_unique_id(
-        title=title,
-        subject=data.get("subject", ""),
-        sent_at=data.get("sent_at", ""),
-        platform="mailchimp"
-    )
+    # Extract campaign title and delivery date
+    campaign_title = None
+    delivery_date = None
+    
+    for i, line in enumerate(lines):
+        key, val = parse_kv(line)
+        if key == "Title":
+            campaign_title = val
+        elif key == "Delivery Date/Time":
+            delivery_date = val
+    
+    # Find all combination sections
+    campaigns = []
+    i = 0
+    combination_num = 1
+    
+    while i < len(lines):
+        line = lines[i]
+        
+        if line.startswith('"Combination') and 'Stats' in line:
+            # Parse this combination
+            combo_data, next_idx = parse_combination(lines, i + 1)
+            
+            # Add metadata
+            combo_data["platform"] = "mailchimp_ab"
+            combo_data["email_title"] = f"{campaign_title} - Combo {combination_num}" if campaign_title else f"{sanitize_title(combo_data['subject'])} {combination_num}"
+            combo_data["sent_at"] = delivery_date
+            
+            # Generate unique ID based on subject, send date, and combination number
+            combo_data["unique_id"] = generate_unique_id(
+                title=campaign_title or "",
+                subject=combo_data.get('subject', ''),
+                sent_at=f"{delivery_date}_{combination_num}" if delivery_date else f"combo_{combination_num}",
+                platform="mailchimp"
+            )
+            
+            # Add hard/soft bounce breakdown (not in this format, set to None)
+            combo_data["hard_bounces"] = None
+            combo_data["hard_bounce_rate"] = None
+            combo_data["soft_bounces"] = None
+            combo_data["soft_bounce_rate"] = None
+            
+            campaigns.append(combo_data)
+            combination_num += 1
+            i = next_idx
+        else:
+            i += 1
     
     return {
-        "campaigns": [data]
+        "campaigns": campaigns
     }

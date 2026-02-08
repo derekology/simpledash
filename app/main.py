@@ -81,49 +81,50 @@ async def parse_report(files: List[UploadFile] = File(...)):
                 continue
             
             # Handle both single campaign and multiple campaigns
-            if "campaign" in result:
-                # Single campaign (MailerLite Classic)
-                campaign = result["campaign"]
+            print(result)
+            # if "campaign" in result:
+            #     # Single campaign (MailerLite Classic)
+            #     campaign = result["campaign"]
                 
-                if not campaign:
-                    errors.append({
-                        "filename": file.filename,
-                        "error": "Failed to parse: Empty campaign data"
-                    })
-                    continue
+            #     if not campaign:
+            #         errors.append({
+            #             "filename": file.filename,
+            #             "error": "Failed to parse: Empty campaign data"
+            #         })
+            #         continue
                 
-                # Validate that campaign has at least some meaningful data
-                # Check if key fields have actual values (not all None)
-                has_data = any([
-                    campaign.get("subject"),
-                    campaign.get("delivered"),
-                    campaign.get("opens"),
-                    campaign.get("clicks"),
-                    campaign.get("sent_at")
-                ])
+            #     # Validate that campaign has at least some meaningful data
+            #     # Check if key fields have actual values (not all None)
+            #     has_data = any([
+            #         campaign.get("subject"),
+            #         campaign.get("delivered"),
+            #         campaign.get("opens"),
+            #         campaign.get("clicks"),
+            #         campaign.get("sent_at")
+            #     ])
                 
-                if not has_data:
-                    errors.append({
-                        "filename": file.filename,
-                        "error": "Failed to parse: No valid campaign data found in file"
-                    })
-                    continue
+            #     if not has_data:
+            #         errors.append({
+            #             "filename": file.filename,
+            #             "error": "Failed to parse: No valid campaign data found in file"
+            #         })
+            #         continue
                 
-                unique_id = campaign.get("unique_id")
+            #     unique_id = campaign.get("unique_id")
                 
-                if unique_id:
-                    # Store with file index for deduplication
-                    if unique_id not in campaigns_by_id or file_index > campaigns_by_id[unique_id].get("_file_index", -1):
-                        campaign["_file_index"] = file_index
-                        campaigns_by_id[unique_id] = campaign
-                else:
-                    # No unique ID, add directly
-                    results.append({
-                        "filename": file.filename,
-                        "data": {"campaign": campaign}
-                    })
+            #     if unique_id:
+            #         # Store with file index for deduplication
+            #         if unique_id not in campaigns_by_id or file_index > campaigns_by_id[unique_id].get("_file_index", -1):
+            #             campaign["_file_index"] = file_index
+            #             campaigns_by_id[unique_id] = campaign
+            #     else:
+            #         # No unique ID, add directly
+            #         results.append({
+            #             "filename": file.filename,
+            #             "data": {"campaign": campaign}
+            #         })
                     
-            elif "campaigns" in result:
+            if "campaigns" in result:
                 # Multiple campaigns (MailChimp)
                 campaigns = result["campaigns"]
                 
@@ -168,6 +169,11 @@ async def parse_report(files: List[UploadFile] = File(...)):
                             "filename": file.filename,
                             "data": {"campaign": campaign}
                         })
+                        # # No unique ID, add to failed parses
+                        # errors.append({
+                        #     "filename": file.filename,
+                        #     "error": "Failed to parse: Could not generate unique_id"
+                        # })
             else:
                 # Neither 'campaign' nor 'campaigns' in result
                 errors.append({

@@ -1,5 +1,6 @@
 export const platformMap = {
     'mailerlite_classic': 'MailerLite Classic',
-    'mailerlite': 'MailerLite',
-    'mailchimp': 'Mailchimp',
+    'mailchimp': 'MailChimp',
+    'mailchimp_ab': 'MailChimp (A/B Test)',
+    'mailchimp_aggregated': 'MailChimp (Aggregated)',
 };

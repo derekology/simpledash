@@ -281,7 +281,6 @@
 
 .platform-card {
     padding: var(--spacing-lg);
-    background-color: var(--color-bg);
     border: 2px solid var(--color-border-dark);
     border-radius: var(--radius-lg);
 }

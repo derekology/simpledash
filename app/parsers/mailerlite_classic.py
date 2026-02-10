@@ -33,6 +33,9 @@ def sanitize_title(subject: str) -> str:
 def parse_mailerlite_classic(text: str):
     lines = [l.strip() for l in text.splitlines() if l.strip()]
 
+    if not lines:
+        return {"campaigns": []}
+
     section = None
 
     data = {
@@ -103,6 +106,9 @@ def parse_mailerlite_classic(text: str):
             elif key == "Soft bounce:":
                 data["soft_bounces"] = num
                 data["soft_bounce_rate"] = pct
+
+    if any(value is None for key, value in data.items() if key not in ["email_title", "unique_id"]):
+        return {"campaigns": []}
 
     if data["opens"] and data["clicks"]:
         data["ctor"] = data["clicks"] / data["opens"]

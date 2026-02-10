@@ -1,5 +1,8 @@
 import re
+from typing import List
 from app.utils.id_generator import generate_unique_id
+from app.models import EmailCampaign, EmptyReportError
+from app.parsers.base_parser import BaseParser
 
 def parse_kv(line: str):
     """Parse key-value pair from CSV format like '"Title:","Personal Styling (Amy 02)"'"""
@@ -36,91 +39,117 @@ def sanitize_title(subject: str) -> str:
     return cleaned if cleaned else "Untitled"
 
 
-def parse_mailchimp(text: str):
-    """Parse MailChimp individual single campaign report"""
-    lines = [l.strip() for l in text.splitlines() if l.strip()]
+class MailChimpParser(BaseParser):
+    """Parser for MailChimp individual single campaign reports"""
     
-    data = {
-        "platform": "mailchimp",
-        "subject": None,
-        "email_title": None,
-        "unique_id": None,
-        "sent_at": None,
-        "delivered": None,
-        "opens": None,
-        "open_rate": None,
-        "clicks": None,
-        "click_rate": None,
-        "unsubscribes": None,
-        "unsubscribe_rate": None,
-        "spam_complaints": None,
-        "bounces": None,
-        "bounce_rate": None,
-        "hard_bounces": None,
-        "hard_bounce_rate": None,
-        "soft_bounces": None,
-        "soft_bounce_rate": None,
-        "ctor": None,
-    }
+    def can_parse(self, text: str) -> bool:
+        """Check if text is a MailChimp single campaign report"""
+        lines = [l.strip() for l in text.splitlines() if l.strip()]
+        return any("Email Campaign Report" in line for line in lines[:5]) and \
+               any("Overall Stats" in line for line in lines[:20])
     
-    campaign_title = None
-    
-    for line in lines:
-        # Stop parsing at "Clicks by URL" section
-        if line.startswith('"Clicks by URL"') or line.startswith('"URL"'):
-            break
+    def parse(self, text: str) -> List[EmailCampaign]:
+        """Parse MailChimp individual single campaign report"""
+        lines = [l.strip() for l in text.splitlines() if l.strip()]
+        
+        subject = None
+        email_title = None
+        sent_at = None
+        delivered = None
+        opens = None
+        open_rate = None
+        clicks = None
+        click_rate = None
+        unsubscribes = None
+        unsubscribe_rate = None
+        spam_complaints = None
+        bounces = None
+        bounce_rate = None
+        ctor = None
+        
+        campaign_title = None
+        
+        for line in lines:
+            if line.startswith('"Clicks by URL"') or line.startswith('"URL"'):
+                break
+                
+            key, val = parse_kv(line)
             
-        key, val = parse_kv(line)
+            if not key:
+                continue
+            
+            if key == "Title":
+                campaign_title = val
+            elif key == "Subject Line":
+                subject = val
+            elif key == "Delivery Date/Time":
+                sent_at = val
+            elif key == "Successful Deliveries":
+                delivered = int(val.replace(',', ''))
+            elif key == "Recipients Who Opened":
+                num, pct = extract_number_and_percent(val)
+                opens = num
+                open_rate = pct
+            elif key == "Recipients Who Clicked":
+                num, pct = extract_number_and_percent(val)
+                clicks = num
+                click_rate = pct
+            elif key == "Total Unsubs":
+                unsubscribes = int(val.replace(',', '')) if val != "0" else 0
+            elif key == "Total Abuse Complaints":
+                spam_complaints = int(val.replace(',', '')) if val != "0" else 0
+            elif key == "Bounces":
+                num, pct = extract_number_and_percent(val)
+                bounces = num
+                bounce_rate = pct
         
-        if not key:
-            continue
+        if opens and clicks and opens > 0:
+            ctor = clicks / opens
         
-        if key == "Title":
-            campaign_title = val
-            data["unique_id"] = val
-        elif key == "Subject Line":
-            data["subject"] = val
-        elif key == "Delivery Date/Time":
-            data["sent_at"] = val
-        elif key == "Successful Deliveries":
-            data["delivered"] = int(val.replace(',', ''))
-        elif key == "Recipients Who Opened":
-            num, pct = extract_number_and_percent(val)
-            data["opens"] = num
-            data["open_rate"] = pct
-        elif key == "Recipients Who Clicked":
-            num, pct = extract_number_and_percent(val)
-            data["clicks"] = num
-            data["click_rate"] = pct
-        elif key == "Total Unsubs":
-            data["unsubscribes"] = int(val.replace(',', '')) if val != "0" else 0
-        elif key == "Total Abuse Complaints":
-            data["spam_complaints"] = int(val.replace(',', '')) if val != "0" else 0
-        elif key == "Bounces":
-            num, pct = extract_number_and_percent(val)
-            data["bounces"] = num
-            data["bounce_rate"] = pct
-    
-    # Calculate CTOR if we have data
-    if data["opens"] and data["clicks"] and data["opens"] > 0:
-        data["ctor"] = data["clicks"] / data["opens"]
-    
-    # Calculate unsubscribe rate if we have delivered count
-    if data["delivered"] and data["unsubscribes"] is not None and data["delivered"] > 0:
-        data["unsubscribe_rate"] = data["unsubscribes"] / data["delivered"]
-    
-    # Set email title
-    title = sanitize_title(data.get("title", ""))
-    data["email_title"] = title
-    
-    # Generate unique ID based on title, subject, and send date
-    data["unique_id"] = generate_unique_id(
-        title=title,
-        subject=data.get("subject", ""),
-        sent_at=data.get("sent_at", ""),
-        platform="mailchimp"
-    )
-    
-    return {
-        "campaigns": [data]
-    }
+        if delivered and unsubscribes is not None and delivered > 0:
+            unsubscribe_rate = unsubscribes / delivered
+        
+        title = sanitize_title(campaign_title or subject or "")
+        email_title = title
+        
+        unique_id = generate_unique_id(
+            title=title,
+            subject=subject or "",
+            sent_at=sent_at or "",
+            platform="mailchimp"
+        )
+        
+        campaign = EmailCampaign(
+            platform="mailchimp",
+            subject=subject,
+            email_title=email_title,
+            unique_id=unique_id,
+            sent_at=sent_at,
+            delivered=delivered,
+            opens=opens,
+            open_rate=open_rate,
+            clicks=clicks,
+            click_rate=click_rate,
+            ctor=ctor,
+            unsubscribes=unsubscribes,
+            unsubscribe_rate=unsubscribe_rate,
+            spam_complaints=spam_complaints,
+            bounces=bounces,
+            bounce_rate=bounce_rate,
+            hard_bounces=None,
+            hard_bounce_rate=None,
+            soft_bounces=None,
+            soft_bounce_rate=None,
+        )
+        
+        if not campaign.has_meaningful_data():
+            raise EmptyReportError("Campaign data incomplete or missing key metrics")
+        
+        return [campaign]
+
+
+def parse_mailchimp(text: str):
+    """Legacy function for backward compatibility"""
+    parser = MailChimpParser()
+    campaigns = parser.parse(text)
+    return {"campaigns": [c.to_dict() for c in campaigns]}

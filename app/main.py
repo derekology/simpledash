@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from app.utils.detector import detect_and_parse
+from app.models import ParseError, InvalidCampaignError, EmptyReportError, UnsupportedFormatError, InvalidFileError
 from typing import List, Dict
 from datetime import datetime
 
@@ -47,8 +48,8 @@ async def parse_report(files: List[UploadFile] = File(...)):
     
     results = []
     errors = []
-    campaigns_by_id: Dict[str, dict] = {}  # For deduplication
-    file_index = 0  # Track upload order
+    campaigns_by_id: Dict[str, dict] = {}
+    file_index = 0
     
     for file in files:
         if not file.filename.lower().endswith(".csv"):
@@ -77,129 +78,61 @@ async def parse_report(files: List[UploadFile] = File(...)):
             continue
 
         try:
-            result = detect_and_parse(text)
+            campaigns = detect_and_parse(text)
             
-            # Validate that parsing returned actual data
-            if not result:
+            if not campaigns:
                 errors.append({
                     "filename": file.filename,
-                    "error": "Failed to parse: No data returned from parser"
+                    "error": "No campaigns found in file"
                 })
                 continue
             
-            # Handle both single campaign and multiple campaigns
-            print(result)
-            # if "campaign" in result:
-            #     # Single campaign (MailerLite Classic)
-            #     campaign = result["campaign"]
-                
-            #     if not campaign:
-            #         errors.append({
-            #             "filename": file.filename,
-            #             "error": "Failed to parse: Empty campaign data"
-            #         })
-            #         continue
-                
-            #     # Validate that campaign has at least some meaningful data
-            #     # Check if key fields have actual values (not all None)
-            #     has_data = any([
-            #         campaign.get("subject"),
-            #         campaign.get("delivered"),
-            #         campaign.get("opens"),
-            #         campaign.get("clicks"),
-            #         campaign.get("sent_at")
-            #     ])
-                
-            #     if not has_data:
-            #         errors.append({
-            #             "filename": file.filename,
-            #             "error": "Failed to parse: No valid campaign data found in file"
-            #         })
-            #         continue
-                
-            #     unique_id = campaign.get("unique_id")
-                
-            #     if unique_id:
-            #         # Store with file index for deduplication
-            #         if unique_id not in campaigns_by_id or file_index > campaigns_by_id[unique_id].get("_file_index", -1):
-            #             campaign["_file_index"] = file_index
-            #             campaigns_by_id[unique_id] = campaign
-            #     else:
-            #         # No unique ID, add directly
-            #         results.append({
-            #             "filename": file.filename,
-            #             "data": {"campaign": campaign}
-            #         })
-                    
-            if "campaigns" in result:
-                # Multiple campaigns (MailChimp)
-                campaigns = result["campaigns"]
-                
-                if not campaigns or len(campaigns) == 0:
-                    errors.append({
-                        "filename": file.filename,
-                        "error": "Failed to parse: No campaigns found in file"
-                    })
+            for campaign in campaigns:
+                if not campaign.has_meaningful_data():
                     continue
                 
-                # Validate each campaign has meaningful data
-                valid_campaigns = []
-                for campaign in campaigns:
-                    has_data = any([
-                        campaign.get("subject"),
-                        campaign.get("delivered"),
-                        campaign.get("opens"),
-                        campaign.get("clicks"),
-                        campaign.get("sent_at")
-                    ])
-                    if has_data:
-                        valid_campaigns.append(campaign)
+                unique_id = campaign.unique_id
+                campaign_dict = campaign.to_dict()
                 
-                if len(valid_campaigns) == 0:
-                    errors.append({
+                if unique_id:
+                    if unique_id not in campaigns_by_id or file_index > campaigns_by_id[unique_id].get("_file_index", -1):
+                        campaign_dict["_file_index"] = file_index
+                        campaigns_by_id[unique_id] = campaign_dict
+                else:
+                    results.append({
                         "filename": file.filename,
-                        "error": "Failed to parse: No valid campaign data found in file"
+                        "data": {"campaign": campaign_dict}
                     })
-                    continue
-                
-                for campaign in valid_campaigns:
-                    unique_id = campaign.get("unique_id")
-                    
-                    if unique_id:
-                        # Store with file index for deduplication
-                        if unique_id not in campaigns_by_id or file_index > campaigns_by_id[unique_id].get("_file_index", -1):
-                            campaign["_file_index"] = file_index
-                            campaigns_by_id[unique_id] = campaign
-                    else:
-                        # No unique ID, add directly
-                        results.append({
-                            "filename": file.filename,
-                            "data": {"campaign": campaign}
-                        })
-                        # # No unique ID, add to failed parses
-                        # errors.append({
-                        #     "filename": file.filename,
-                        #     "error": "Failed to parse: Could not generate unique_id"
-                        # })
-            else:
-                # Neither 'campaign' nor 'campaigns' in result
-                errors.append({
-                    "filename": file.filename,
-                    "error": "Failed to parse: Unknown data format returned"
-                })
-                continue
             
             file_index += 1
             
+        except EmptyReportError as e:
+            errors.append({
+                "filename": file.filename,
+                "error": f"Empty report: {e.message}"
+            })
+        except UnsupportedFormatError as e:
+            errors.append({
+                "filename": file.filename,
+                "error": f"Unsupported format: {e.message}"
+            })
+        except InvalidCampaignError as e:
+            errors.append({
+                "filename": file.filename,
+                "error": f"Invalid campaign: {e.message}"
+            })
+        except ParseError as e:
+            errors.append({
+                "filename": file.filename,
+                "error": f"Parse error: {e.message}"
+            })
         except Exception as e:
             errors.append({
                 "filename": file.filename,
                 "error": f"Failed to parse: {str(e)}"
             })
     
-    # Add deduplicated campaigns to results
     for unique_id, campaign in campaigns_by_id.items():
-        # Remove internal tracking field
         campaign.pop("_file_index", None)
         results.append({
             "filename": "deduplicated",

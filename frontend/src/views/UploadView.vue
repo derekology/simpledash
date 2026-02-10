@@ -154,6 +154,14 @@ const viewDashboard = () => {
                 Upload one or more MailChimp or MailerLite Classic reports (more platforms coming soon!)
             </p>
 
+            <div class="info-banner">
+                <p class="info-text">
+                    <strong>Duplicate Detection:</strong> If you upload files containing the same campaign, we'll
+                    attempt to use the most recent version. For best results, please filter duplicate campaigns before
+                    uploading.
+                </p>
+            </div>
+
             <UploadSection @files-selected="handleFilesSelected" @upload="handleUpload"
                 @validation-error="handleValidationError" />
 
@@ -254,8 +262,40 @@ const viewDashboard = () => {
 .page-description {
     font-size: 16px;
     color: var(--color-text-light);
-    margin: 0 0 48px 0;
+    margin: 0 0 24px 0;
     text-align: center;
+}
+
+.info-banner {
+    margin-bottom: 32px;
+    padding: 16px 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+    border: 1px solid #2196f3;
+    box-shadow: 0 2px 6px rgba(33, 150, 243, 0.1);
+}
+
+.info-icon {
+    width: 22px;
+    height: 22px;
+    color: #1976d2;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.info-text {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #0d47a1;
+}
+
+.info-text strong {
+    font-weight: 700;
+    color: #0d47a1;
 }
 
 .status-message {

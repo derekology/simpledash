@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import UploadSection from '@/components/UploadSection.vue'
+import { generateDemoData } from '@/utils/demoData'
 
 interface CampaignData {
     platform: string
@@ -50,6 +51,17 @@ const hasDataInSession = () => {
     } catch {
         return false
     }
+}
+
+const loadDemoData = () => {
+    sessionStorage.removeItem('campaigns')
+    sessionStorage.removeItem('failedUploads')
+
+    const demoCampaigns = generateDemoData(10)
+
+    sessionStorage.setItem('campaigns', JSON.stringify(demoCampaigns))
+
+    router.push({ name: 'dashboard' })
 }
 
 const handleFilesSelected = (files: File[]) => {
@@ -154,6 +166,24 @@ const viewDashboard = () => {
                 Upload one or more MailChimp or MailerLite Classic reports (more platforms coming soon!)
             </p>
 
+            <div class="demo-banner">
+                <p class="demo-text">
+                    Want to see what simple dash can do?
+                </p>
+                <button @click="loadDemoData" class="demo-button">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" class="demo-icon">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                        <polyline points="10 17 15 12 10 7" />
+                        <line x1="15" y1="12" x2="3" y2="12" />
+                    </svg>
+                    Try Demo with Sample Data
+                </button>
+            </div>
+
+            <UploadSection @files-selected="handleFilesSelected" @upload="handleUpload"
+                @validation-error="handleValidationError" />
+
             <div class="info-banner">
                 <p class="info-text">
                     <strong>Duplicate Detection:</strong> If you upload files containing the same campaign, we'll
@@ -161,9 +191,6 @@ const viewDashboard = () => {
                     uploading.
                 </p>
             </div>
-
-            <UploadSection @files-selected="handleFilesSelected" @upload="handleUpload"
-                @validation-error="handleValidationError" />
 
             <div v-if="validationError" class="status-message warning">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -266,8 +293,51 @@ const viewDashboard = () => {
     text-align: center;
 }
 
+.demo-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 24px 32px;
+    border-radius: 12px;
+    margin-bottom: 24px;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.demo-text {
+    margin: 0 0 16px 0;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.demo-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 28px;
+    background-color: #ffffff;
+    color: #667eea;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.demo-button:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    background-color: #f8f9ff;
+}
+
+.demo-icon {
+    width: 20px;
+    height: 20px;
+}
+
 .info-banner {
-    margin-bottom: 32px;
+    margin-top: 32px;
     padding: 16px 20px;
     border-radius: 8px;
     display: flex;

@@ -152,6 +152,27 @@
             </div>
         </section>
 
+        <section class="help-section connect-section">
+            <div class="connect-header">
+                <h2>Have an Idea for a Tool?</h2>
+            </div>
+            <p class="connect-text">
+                Are you a marketer, founder, or business owner with an idea for a tool that could solve real-world
+                problems?
+            </p>
+            <p class="connect-text">
+                I built Simple Dash to help marketers analyze their email campaigns more effectively. If you have a pain
+                point that could be solved with a tool like this, I'd love to hear about it!
+            </p>
+            <a href="https://www.linkedin.com/in/derekology" target="_blank" rel="noopener" class="linkedin-button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="button-icon">
+                    <path
+                        d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                </svg>
+                Connect on LinkedIn
+            </a>
+        </section>
+
         <section class="help-section disclaimer-section">
             <h2>Disclaimer</h2>
             <p class="disclaimer-text">
@@ -361,6 +382,67 @@
 
 .disclaimer-text:last-child {
     margin-bottom: 0;
+}
+
+.connect-section {
+    background: linear-gradient(135deg, #0077b5 0%, #00a0dc 100%);
+    color: #ffffff;
+    border: none;
+    padding: var(--spacing-xl);
+    text-align: center;
+}
+
+.connect-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.connect-header h2 {
+    color: #ffffff;
+    margin: 0;
+}
+
+.connect-section .connect-text {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #ffffff;
+    margin: 0 0 var(--spacing-md) 0;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.connect-text strong {
+    font-weight: 700;
+}
+
+.linkedin-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-md) var(--spacing-xl);
+    background-color: #ffffff;
+    color: #0077b5;
+    text-decoration: none;
+    border-radius: var(--radius-lg);
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    margin-top: var(--spacing-md);
+}
+
+.linkedin-button:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background-color: #f8f9fa;
+}
+
+.button-icon {
+    width: 24px;
+    height: 24px;
 }
 
 @media (max-width: 768px) {

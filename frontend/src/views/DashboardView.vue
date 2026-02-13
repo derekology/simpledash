@@ -917,49 +917,12 @@ const trendChartOptions = {
           <div class="campaign-selector">
             <MultiSearchDropdown :options="campaignDropdownOptions" v-model="selectedTrendCampaigns"
               :show-outliers="true" :outliers-count="outliersInfo.count" :outliers-button-text="outliersInfo.buttonText"
-              :show-low-volume="true" :low-volume-count="lowVolumeInfo.count" :low-volume-button-text="lowVolumeInfo.buttonText"
-              @toggle-outliers="toggleOutliers" @toggle-low-volume="toggleLowVolume" />
+              :show-low-volume="true" :low-volume-count="lowVolumeInfo.count"
+              :low-volume-button-text="lowVolumeInfo.buttonText" @toggle-outliers="toggleOutliers"
+              @toggle-low-volume="toggleLowVolume" />
           </div>
 
           <div class="charts-grid">
-            <div class="chart-card wide">
-              <div class="chart-header">
-                <h3>Deliveries</h3>
-                <div class="chart-metrics">
-                  <span class="metric-label">Average:</span>
-                  <span class="metric-value">{{ formatNumber(aggregatedMetrics.avgDelivered) }}</span>
-                </div>
-              </div>
-              <div class="chart-container">
-                <Line v-if="deliveriesTrend" :data="deliveriesTrend" :options="trendChartOptions" />
-              </div>
-            </div>
-
-            <div class="chart-card wide">
-              <div class="chart-header">
-                <h3>Opens</h3>
-                <div class="chart-metrics">
-                  <span class="metric-label">Average:</span>
-                  <span class="metric-value">{{ formatNumber(aggregatedMetrics.avgOpens) }}</span>
-                </div>
-              </div>
-              <div class="chart-container">
-                <Line v-if="opensTrend" :data="opensTrend" :options="trendChartOptions" />
-              </div>
-            </div>
-
-            <div class="chart-card wide">
-              <div class="chart-header">
-                <h3>Clicks</h3>
-                <div class="chart-metrics">
-                  <span class="metric-label">Average:</span>
-                  <span class="metric-value">{{ formatNumber(aggregatedMetrics.avgClicks) }}</span>
-                </div>
-              </div>
-              <div class="chart-container">
-                <Line v-if="clicksTrend" :data="clicksTrend" :options="trendChartOptions" />
-              </div>
-            </div>
 
             <div class="chart-card">
               <div class="chart-header">
@@ -1054,6 +1017,45 @@ const trendChartOptions = {
               </div>
               <div class="chart-container">
                 <Line v-if="softBounceRateTrend" :data="softBounceRateTrend" :options="trendChartOptions" />
+              </div>
+            </div>
+
+            <div class="chart-card wide">
+              <div class="chart-header">
+                <h3>Deliveries</h3>
+                <div class="chart-metrics">
+                  <span class="metric-label">Average:</span>
+                  <span class="metric-value">{{ formatNumber(aggregatedMetrics.avgDelivered) }}</span>
+                </div>
+              </div>
+              <div class="chart-container">
+                <Line v-if="deliveriesTrend" :data="deliveriesTrend" :options="trendChartOptions" />
+              </div>
+            </div>
+
+            <div class="chart-card wide">
+              <div class="chart-header">
+                <h3>Opens</h3>
+                <div class="chart-metrics">
+                  <span class="metric-label">Average:</span>
+                  <span class="metric-value">{{ formatNumber(aggregatedMetrics.avgOpens) }}</span>
+                </div>
+              </div>
+              <div class="chart-container">
+                <Line v-if="opensTrend" :data="opensTrend" :options="trendChartOptions" />
+              </div>
+            </div>
+
+            <div class="chart-card wide">
+              <div class="chart-header">
+                <h3>Clicks</h3>
+                <div class="chart-metrics">
+                  <span class="metric-label">Average:</span>
+                  <span class="metric-value">{{ formatNumber(aggregatedMetrics.avgClicks) }}</span>
+                </div>
+              </div>
+              <div class="chart-container">
+                <Line v-if="clicksTrend" :data="clicksTrend" :options="trendChartOptions" />
               </div>
             </div>
           </div>

@@ -1,21 +1,65 @@
-# Deployment Guide
+# Production Deployment Guide
 
-This guide covers deploying Simple Dash to production environments.
+## Overview
 
-## Prerequisites
+This guide covers deploying Simple Dash to a production environment using Docker.
 
-- Server with Docker installed (Ubuntu 22.04+ recommended)
-- Domain name (optional but recommended)
-- SSL certificate (Let's Encrypt recommended)
+## Quick Start (Recommended)
+
+The easiest way to deploy Simple Dash is using the pre-built Docker image:
+
+### 1. Download docker-compose file
+
+```bash
+# Create directory
+mkdir simpledash && cd simpledash
+
+# Download docker-compose file
+curl -O https://raw.githubusercontent.com/derekology/simpledash/main/docker-compose.hub.yml
+
+# Rename to docker-compose.yml
+mv docker-compose.hub.yml docker-compose.yml
+```
+
+### 2. Create environment file (optional)
+
+```bash
+cat > .env << EOF
+PORT=8000
+MAX_FILE_SIZE=10485760
+MAX_FILES=12
+DEV=False
+EOF
+```
+
+### 3. Start the application
+
+```bash
+docker compose up -d
+```
+
+That's it! Simple Dash is now running on port 8000.
+
+### 4. Verify it's working
+
+```bash
+curl http://localhost:8000/health
+```
+
+---
+
+## Alternative: Build from Source
+
+If you prefer to build from source instead of using the Docker Hub image:
+
+### Prerequisites
+
+- Docker 20.10+
+- Docker Compose 2.0+
+- Domain name (for SSL)
 - Reverse proxy (nginx recommended)
 
-## Deployment Options
-
-### Option 1: Docker Compose (Recommended)
-
-Simplest method for single-server deployments.
-
-#### Step 1: Server Setup
+### 1. Server Preparation
 
 ```bash
 # Update system
@@ -33,7 +77,7 @@ newgrp docker
 sudo apt install docker-compose-plugin
 ```
 
-#### Step 2: Deploy Application
+### 2. Application Deployment
 
 ```bash
 # Clone repository
@@ -52,7 +96,26 @@ docker compose ps
 docker compose logs
 ```
 
-#### Step 3: Set Up Reverse Proxy
+### 3. Environment Configuration
+
+Edit `.env` for production:
+
+```bash
+PORT=8000
+MAX_FILE_SIZE=10485760  # 10MB
+MAX_FILES=12
+DEV=False
+```
+
+### 4. Start Application
+
+```bash
+docker compose up -d
+```
+
+## Reverse Proxy Setup
+
+### Nginx
 
 **Install nginx:**
 
@@ -100,7 +163,9 @@ sudo nginx -t
 sudo systemctl restart nginx
 ```
 
-#### Step 4: SSL/TLS Setup
+## SSL/TLS Setup
+
+### Using Certbot (with Nginx)
 
 **Install Certbot:**
 
@@ -124,36 +189,16 @@ sudo certbot renew --dry-run
 sudo systemctl status certbot.timer
 ```
 
-### Option 2: Build from Source
+## Cloud Platforms
 
-For customized deployments.
-
-```bash
-# Build frontend
-cd frontend
-npm ci
-npm run build
-
-# Set up Python environment
-cd ..
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-
-# Run with uvicorn
-uvicorn app.main:app --host 0.0.0.0 --port 8000
-```
-
-### Option 3: Cloud Platforms
-
-#### AWS ECS
+### AWS ECS
 
 1. Push Docker image to ECR
 2. Create ECS task definition
 3. Create ECS service with ALB
 4. Configure Route53 for DNS
 
-#### Google Cloud Run
+### Google Cloud Run
 
 ```bash
 # Build and push
@@ -168,7 +213,7 @@ gcloud run deploy simpledash \
   --max-instances 10
 ```
 
-#### DigitalOcean App Platform
+### DigitalOcean App Platform
 
 1. Connect GitHub repository
 2. Configure build settings
@@ -179,18 +224,20 @@ gcloud run deploy simpledash \
 
 ### Environment Variables
 
+| Variable        | Default    | Description          |
+| --------------- | ---------- | -------------------- |
+| `PORT`          | `8000`     | Server port          |
+| `MAX_FILE_SIZE` | `10485760` | Max file size (10MB) |
+| `MAX_FILES`     | `12`       | Max files per upload |
+| `DEV`           | `False`    | Development mode     |
+
 Production-ready `.env` file:
 
 ```env
-# Server
 PORT=8000
-
-# Upload Limits
-MAX_FILE_SIZE=10485760  # 10MB
+MAX_FILE_SIZE=10485760
 MAX_FILES=12
-
-# Security
-# Add any API keys or secrets here
+DEV=False
 ```
 
 ### Reverse Proxy Configuration
@@ -386,9 +433,20 @@ services:
           memory: 2G
 ```
 
+## Maintenance
+
 ## Updates and Maintenance
 
 ### Update Application
+
+**Using Docker Hub image:**
+
+```bash
+docker compose pull
+docker compose up -d
+```
+
+**From source:**
 
 ```bash
 # Pull latest changes

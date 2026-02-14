@@ -1,0 +1,24 @@
+services:
+  simpledash:
+    image: derekology/simpledash:latest
+    container_name: simpledash
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8000}:${PORT:-8000}"
+    environment:
+      - PORT=${PORT:-8000}
+      - MAX_FILE_SIZE=${MAX_FILE_SIZE:-10485760}
+      - MAX_FILES=${MAX_FILES:-12}
+      - DEV=${DEV:-False}
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:${PORT:-8000}/health').read()",
+        ]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s

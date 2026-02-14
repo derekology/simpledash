@@ -18,11 +18,27 @@
 
 ## 🚀 Quick Start
 
-### Using Docker (Recommended)
+### Easiest: Pre-built Docker Image (No Clone Required!)
+
+```bash
+# Create directory
+mkdir simpledash && cd simpledash
+
+# Download docker-compose file
+curl -O https://raw.githubusercontent.com/derekology/simpledash/main/docker-compose.hub.yml -o docker-compose.yml
+
+# Start (uses defaults: port 8000, 10MB max file size, 12 max files)
+docker compose up -d
+```
+
+Access at `http://localhost:8000` - that's it! 🎉
+
+### For Development: One-Command Start
 
 **Linux/Mac:**
 
 ```bash
+chmod +x start.sh
 ./start.sh
 ```
 
@@ -32,13 +48,37 @@
 start.bat
 ```
 
-**Or manually:**
+This will automatically:
+
+- Check if Docker is installed and running
+- Create `.env` file from template
+- Build the Docker image
+- Start the application
+- Show you the URL to access Simple Dash
+
+### Building from Source
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/derekology/simpledash
+cd simpledash
+```
+
+2. (Optional) Configure environment variables:
+
+```bash
+cp .env.example .env
+# Edit .env with your preferred settings
+```
+
+3. Start the application:
 
 ```bash
 docker compose up -d
 ```
 
-Access the application at `http://localhost:8000`
+4. Access the application at `http://localhost:8000` (or your configured PORT from `.env`)
 
 ### Manual Installation
 

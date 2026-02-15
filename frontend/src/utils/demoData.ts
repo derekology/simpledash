@@ -22,21 +22,29 @@ export interface DemoCampaignData {
 
 const generateCampaign = (index: number, baseDate: Date): DemoCampaignData => {
   // Create delivery outliers for specific campaigns
+  // Generate 10-15 outliers out of 50 campaigns in random indices (~20-30%)
+  const outlierIndices = new Set<number>()
+  while (outlierIndices.size < 12) {
+    outlierIndices.add(Math.floor(Math.random() * 50))
+  }
+
   let delivered: number
-  if (index === 2) {
-    // Outlier: Very low deliveries (test send)
-    delivered = Math.floor(500 + Math.random() * 200)
-  } else if (index === 7) {
-    // Outlier: Very high deliveries (major campaign)
-    delivered = Math.floor(45000 + Math.random() * 5000)
-  } else if (index === 9) {
-    // Outlier: Another low deliveries
-    delivered = Math.floor(800 + Math.random() * 300)
+  if (outlierIndices.has(index)) {
+    // Randomly decide if this is a low-volume or high-volume outlier
+    const isLowVolume = Math.random() < 0.7 // 70% chance of low volume
+
+    if (isLowVolume) {
+      // Low volume: test sends, small lists
+      delivered = Math.floor(300 + Math.random() * 1200) // 300-1500
+    } else {
+      // High volume: major campaigns
+      delivered = Math.floor(35000 + Math.random() * 15000) // 35k-50k
+    }
   } else {
     // Normal deliveries around 15k
     delivered = Math.floor(14000 + Math.random() * 2000)
   }
-  
+
   const open_rate = 0.15 + Math.random() * 0.20
   const opens = Math.floor(delivered * open_rate)
   const click_rate = 0.01 + Math.random() * 0.07
@@ -49,7 +57,7 @@ const generateCampaign = (index: number, baseDate: Date): DemoCampaignData => {
   const soft_bounce_rate = 0.005 + Math.random() * 0.015
   const soft_bounces = Math.floor(delivered * soft_bounce_rate)
   const spam_complaints = Math.floor(Math.random() * 5)
-  
+
   // Generate dates with varied weekdays
   // Define specific days of week for each campaign to ensure variety
   const weekdayOffsets = [
@@ -64,7 +72,7 @@ const generateCampaign = (index: number, baseDate: Date): DemoCampaignData => {
     6,  // Saturday (index 8)
     2   // Tuesday (index 9)
   ]
-  
+
   const campaignDate = new Date(baseDate)
   // Go back weeks, then adjust to specific weekday
   campaignDate.setDate(campaignDate.getDate() - (index * 7))
@@ -72,7 +80,7 @@ const generateCampaign = (index: number, baseDate: Date): DemoCampaignData => {
   const targetDay = weekdayOffsets[index % weekdayOffsets.length] ?? 1
   const dayDiff = targetDay - currentDay
   campaignDate.setDate(campaignDate.getDate() + dayDiff)
-  
+
   // Vary the time of day (morning: 8-11am, afternoon: 2-5pm)
   const isMorning = index % 2 === 0
   if (isMorning) {
@@ -80,7 +88,7 @@ const generateCampaign = (index: number, baseDate: Date): DemoCampaignData => {
   } else {
     campaignDate.setHours(14 + Math.floor(Math.random() * 3), Math.floor(Math.random() * 60))
   }
-  
+
   const demoSubjects = [
     '🚀 New Product Launch - Limited Time Offer!',
     '📢 Important Update: Changes to Our Service',
@@ -93,7 +101,7 @@ const generateCampaign = (index: number, baseDate: Date): DemoCampaignData => {
     '💰 Save Big: End of Season Clearance',
     '🎁 Special Offer Just for You'
   ]
-  
+
   const demoTitles = [
     'Product Launch Demo',
     'Service Update Demo',
@@ -106,7 +114,7 @@ const generateCampaign = (index: number, baseDate: Date): DemoCampaignData => {
     'Clearance Sale Demo',
     'Member Offer Demo'
   ]
-  
+
   return {
     platform: 'demo',
     subject: demoSubjects[index % demoSubjects.length] || 'Demo Campaign',
@@ -129,7 +137,7 @@ const generateCampaign = (index: number, baseDate: Date): DemoCampaignData => {
   }
 }
 
-export const generateDemoData = (count: number = 10): DemoCampaignData[] => {
+export const generateDemoData = (count: number = 50): DemoCampaignData[] => {
   const baseDate = new Date()
   const campaigns: DemoCampaignData[] = []
   for (let i = 0; i < count; i++) {

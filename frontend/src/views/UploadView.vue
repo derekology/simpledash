@@ -57,7 +57,7 @@ const loadDemoData = () => {
     sessionStorage.removeItem('campaigns')
     sessionStorage.removeItem('failedUploads')
 
-    const demoCampaigns = generateDemoData(10)
+    const demoCampaigns = generateDemoData(50)
 
     sessionStorage.setItem('campaigns', JSON.stringify(demoCampaigns))
 
